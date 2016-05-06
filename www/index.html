@@ -53,20 +53,25 @@
         <ons-page>
           <ons-toolbar>
             <div class="center">社員一覧</div>
+            <div class="right">
+              <ons-toolbar-button onclick="myNavigator.pushPage('record.html', { animation : 'slide' } )">
+                <ons-icon icon="fa-bars"></ons-icon>
+              </ons-toolbar-button>
+            </div>
           </ons-toolbar>
 
           <ons-list>
             <ons-list-item modifier="chevron" onclick="myNavigator.pushPage('page1.html', { animation : 'slide' } )">
-              Slide Animation
+              北村尚紀
             </ons-list-item>
-            <ons-list-item modifier="chevron" onclick="myNavigator.pushPage('page1.html', { animation : 'lift' } )">
-              Lift Animation
+            <ons-list-item modifier="chevron" onclick="myNavigator.pushPage('page1.html', { animation : 'slide' } )">
+              佐々木友美
             </ons-list-item>
-            <ons-list-item modifier="chevron" onclick="myNavigator.pushPage('page1.html', { animation : 'fade' } )">
-              Fade Animation
+            <ons-list-item modifier="chevron" onclick="myNavigator.pushPage('page1.html', { animation : 'slide' } )">
+              久米啓太
             </ons-list-item>
-            <ons-list-item modifier="chevron" onclick="myNavigator.pushPage('page1.html', { animation : 'none' } )">
-              None Animation
+            <ons-list-item modifier="chevron" onclick="myNavigator.pushPage('page1.html', { animation : 'slide' } )">
+              保苅ヒロキ
             </ons-list-item>
           </ons-list>
         </ons-page>
@@ -79,6 +84,22 @@
               <ons-back-button>Back</ons-back-button>
             </div>
             <div class="center">Page 2</div>
+          </ons-toolbar>
+          <div style="text-align: center; margin-top: 100px;">
+            <ons-button modifier="light" onclick="myNavigator.popPage()">
+              Pop Page
+            </ons-button>
+          </div>
+        </ons-page>
+      </ons-template>
+
+      <ons-template id="record.html">
+        <ons-page>
+          <ons-toolbar>
+            <div class="left">
+              <ons-back-button>Back</ons-back-button>
+            </div>
+            <div class="center">出勤記録</div>
           </ons-toolbar>
           <div style="text-align: center; margin-top: 100px;">
             <ons-button modifier="light" onclick="myNavigator.popPage()">
