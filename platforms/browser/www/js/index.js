@@ -49,3 +49,21 @@ var app = {
 };
 
 app.initialize();
+
+ons.bootstrap();
+var module = ons.bootstrap('myApp', ['onsen']);
+    module.controller('topController', function($scope) {
+        var $scope.user_list = [
+            { name: "北村尚紀"},
+            { name: "佐々木友美"},
+            { name: "久米啓太"},
+            { name: "保苅ヒロキ"}
+        ];
+    });
+
+
+    module.controller('PageController', function($scope) {
+    ons.ready(function() {
+      // Init code here
+    });
+    });
