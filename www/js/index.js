@@ -53,17 +53,47 @@ app.initialize();
 ons.bootstrap();
 var module = ons.bootstrap('myApp', ['onsen']);
     module.controller('topController', function($scope) {
-        $scope.user_list = [
-            { name: "北村尚紀", id: 1},
-            { name: "佐々木友美", id: 2},
-            { name: "久米啓太", id: 3},
-            { name: "保苅ヒロキ", id: 4}
-        ];
+        var data = Array();
+        data[0]={
+            id: 1,
+            name: "北村尚紀"
+        };
+        data[1]={
+            id: 2,
+            name: "佐々木友美"
+        };
+        data[2]={
+            id: 3,
+            name: "久米啓太"
+        };
+        data[3]={
+            id: 4,
+            name: "保苅ヒロキ"
+        };
+        $scope.users = Array();
+        for(var i = 0; i < data.length; i++){
+            window.localStorage.setItem("users[" + String(i) + "]",JSON.stringify(data[i]));
+            $scope.users[i] = JSON.parse(window.localStorage.getItem("users[" + String(i) + "]"));
+        }
     });
 
 
     module.controller('detailController', function($scope) {
         var options = $scope.myNavigator.getCurrentPage().options;
         $scope.user = options.user;
+        var tmp;
 
+        $scope.onclick = function(){
+            if($scope.user.started_at == null){
+                $scope.user.started_at = new Date();
+                $(".start_btn").text("STOP");
+            }else if($scope.user.ended_at == null){
+                $scope.user.ended_at = new Date();
+            }else{
+                tmp = $scope.user.ended_at - $scope.user.started_at;
+                var hour = Math.floor(tmp / 1000 / 60 / 60);
+                var min = Math.floor((tmp - hour * 1000 + 60 * 60) / 1000 / 60);
+                $scope.time_count = String(hour) + "時間" + String(min) + "分";
+            }
+        }
     });
