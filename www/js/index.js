@@ -53,28 +53,27 @@ app.initialize();
 ons.bootstrap();
 var module = ons.bootstrap('myApp', ['onsen']);
     module.controller('topController', function($scope) {
-        var data = Array();
-        data[0]={
-            id: 1,
-            name: "北村尚紀"
-        };
-        data[1]={
-            id: 2,
-            name: "佐々木友美"
-        };
-        data[2]={
-            id: 3,
-            name: "久米啓太"
-        };
-        data[3]={
-            id: 4,
-            name: "保苅ヒロキ"
-        };
-        $scope.users = Array();
-        for(var i = 0; i < data.length; i++){
-            window.localStorage.setItem("users[" + String(i) + "]",JSON.stringify(data[i]));
-            $scope.users[i] = JSON.parse(window.localStorage.getItem("users[" + String(i) + "]"));
+        var data = {
+            data1:{
+                id: 1,
+                name: "北村尚紀"
+            },
+            data2:{
+                id: 2,
+                name: "佐々木友美"
+            },
+            data3:{
+                id: 3,
+                name: "久米啓太"
+            },
+            data4:{
+                id: 4,
+                name: "保苅ヒロキ"
+            }
         }
+        window.localStorage.setItem("users",JSON.stringify(data));
+        var users = window.localStorage.getItem("users");
+        $scope.users = JSON.parse(users);
     });
 
 
@@ -84,16 +83,45 @@ var module = ons.bootstrap('myApp', ['onsen']);
         var tmp;
 
         $scope.onclick = function(){
-            if($scope.user.started_at == null){
-                $scope.user.started_at = new Date();
+            var time = new Date();
+            var records = window.localStorage.getItem("records");
+            $scope.records = JSON.parse(records);
+            var count = 0;
+            var record_flag = true; //新しいレコードを作る場合はtrue
+            for(var record in $scope.records){
+                if(record.user_id == $scope.user.id){
+                    record_exist = false;
+                    $(".start_btn").text("STOP");
+                    $scope.record = record;
+                }
+                record++;
+            }
+
+            if(record_flag){
+
+                var data = {
+                    id:count + 1,
+                    user_id:$scope.user.id,
+                    started_at:time,
+                    ended_at:null
+                }
+                window.localStorage.setItem("records",JSON.stringify(data));
                 $(".start_btn").text("STOP");
-            }else if($scope.user.ended_at == null){
-                $scope.user.ended_at = new Date();
+                $scope.record =JSON.parse(window.localStorage.getItem("records"));
+                record_flag = false;
             }else{
-                tmp = $scope.user.ended_at - $scope.user.started_at;
+                var data = {
+                    id:$scope.record.id,
+                    user_id:$scope.record.user_id,
+                    started_at:t$scope.record.started_at,
+                    ended_at:time
+                }
+                window.localStorage.setItem("records",JSON.stringify(data));
+                tmp = $scope.record.ended_at - $scope.record.started_at;
                 var hour = Math.floor(tmp / 1000 / 60 / 60);
                 var min = Math.floor((tmp - hour * 1000 + 60 * 60) / 1000 / 60);
                 $scope.time_count = String(hour) + "時間" + String(min) + "分";
+
             }
         }
     });
