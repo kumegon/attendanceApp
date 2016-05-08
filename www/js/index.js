@@ -88,26 +88,32 @@ var module = ons.bootstrap('myApp', ['onsen']);
             $scope.records = JSON.parse(records);
             var count = 0;
             var record_flag = true; //新しいレコードを作る場合はtrue
-            for(var record in $scope.records){
-                if(record.user_id == $scope.user.id){
-                    record_exist = false;
-                    $(".start_btn").text("STOP");
-                    $scope.record = record;
+            if(records != null){
+                for(var record in $scope.records){
+                    if(record.user_id == 1){
+                        $(".start_btn").text("STOP");
+                        record_exist = false;
+                        $scope.record = record;
+                    }
+                    count++;
                 }
-                record++;
             }
 
             if(record_flag){
-
+                var key = ("data" + String(count + 1));
+                var obj = new Object();
                 var data = {
                     id:count + 1,
                     user_id:$scope.user.id,
                     started_at:time,
                     ended_at:null
                 }
-                window.localStorage.setItem("records",JSON.stringify(data));
+                obj[key] = data;
+                $scope.inserted_new_records_list = $scope.records.push(obj);
                 $(".start_btn").text("STOP");
-                $scope.record =JSON.parse(window.localStorage.getItem("records"));
+
+                window.localStorage.setItem("records",JSON.stringify(inserted_new_records_list));
+                $scope.records =JSON.parse(window.localStorage.getItem("records"));
                 record_flag = false;
             }else{
                 var data = {
