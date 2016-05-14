@@ -51,9 +51,22 @@ var app = {
 app.initialize();
 
 ons.bootstrap();
-var module = ons.bootstrap('myApp', ['onsen', 'ngResource']);
-    module.controller('topController', ['$scope', function ($scope) {
+var module = angular.module('myApp', ['onsen', 'ngResource']);
 
+    module.factory("User", ['$resource', function($resource){
+
+        return $resource(
+            'http://localhost:3000/users/:id',
+            {id: '@id'},
+            {
+                get: { method: 'GET', isArray: true},
+                create: {method: 'POST'}
+            }
+        );
+    }]);
+
+
+    module.controller('topController', ['$scope', 'User', function($scope, User){
         var data = {
             data1:{
                 id: 1,
@@ -69,14 +82,17 @@ var module = ons.bootstrap('myApp', ['onsen', 'ngResource']);
             },
             data4:{
                 id: 4,
-                name: "保苅ヒロキ"
+                name: "帆刈大樹"
             }
         }
-        window.localStorage.setItem("users",JSON.stringify(data));
-        var users = window.localStorage.getItem("users");
-        $scope.users = JSON.parse(users);
 
+//        $scope.users = user.query();
+
+        window.localStorage.setItem("users",JSON.stringify(data));
+        var users = users;
+        $scope.users = JSON.parse(users);
     }]);
+
 
 
 
