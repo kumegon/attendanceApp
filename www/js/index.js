@@ -51,8 +51,9 @@ var app = {
 app.initialize();
 
 ons.bootstrap();
-var module = ons.bootstrap('myApp', ['onsen']);
-    module.controller('topController', function($scope) {
+var module = ons.bootstrap('myApp', ['onsen', 'ngResource']);
+    module.controller('topController', ['$scope', function ($scope) {
+
         var data = {
             data1:{
                 id: 1,
@@ -74,7 +75,10 @@ var module = ons.bootstrap('myApp', ['onsen']);
         window.localStorage.setItem("users",JSON.stringify(data));
         var users = window.localStorage.getItem("users");
         $scope.users = JSON.parse(users);
-    });
+
+    }]);
+
+
 
 
     module.controller('detailController', function($scope) {
