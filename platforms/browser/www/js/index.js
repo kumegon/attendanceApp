@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -53,6 +54,20 @@ app.initialize();
 ons.bootstrap();
 var module = angular.module('myApp', ['onsen', 'ngResource']);
 
+
+
+module.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.defaults.useXDomain = true;
+ $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    console.log("dadsadada");
+
+  contentType = 'application/x-www-form-urlencoded;application/json;charset=utf-8';
+  $httpProvider.defaults.headers.post = {'Content-Type': contentType};
+  $httpProvider.defaults.headers.put = {'Content-Type': contentType};
+  $httpProvider.defaults.headers.delete = {'Content-Type': contentType};
+
+}]);
+
     module.factory("User", ['$resource', function($resource){
 
         return $resource(
@@ -73,10 +88,12 @@ var module = angular.module('myApp', ['onsen', 'ngResource']);
             {
                 query: { method: 'GET', isArray: true},
                 get: { method: 'GET', isArray: false},
-                save: { method: 'PATCH'}
+                update: { method: 'PUT', withCredentials: true}
             }
         );
     }]);
+
+
 
 
     module.controller('topController', ['$scope', 'User', function($scope, User){
@@ -100,6 +117,7 @@ var module = angular.module('myApp', ['onsen', 'ngResource']);
             }
         });
     });
+    console.log("loaded");
 
         $scope.onclick = function(){
             var time = new Date();
@@ -117,7 +135,8 @@ var module = angular.module('myApp', ['onsen', 'ngResource']);
                 $scope.record = new Record($scope.record);
                 console.log($scope.record);
                 $scope.record.ended_at = time;
-                $scope.record.$save();
+                console.log($scope.record);
+                $scope.record.$update();
                 console.log("update");
                 tmp = $scope.record.ended_at - Date.parse($scope.record.started_at);
                 var hour = Math.floor(tmp / 1000 / 60 / 60);

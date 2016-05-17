@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -53,17 +54,18 @@ app.initialize();
 ons.bootstrap();
 var module = angular.module('myApp', ['onsen', 'ngResource']);
 
+
+
 module.config(['$httpProvider', function($httpProvider) {
-    console.log("dadsadada");
   $httpProvider.defaults.useXDomain = true;
- $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';;
+ $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    console.log("dadsadada");
 
   contentType = 'application/x-www-form-urlencoded;application/json;charset=utf-8';
   $httpProvider.defaults.headers.post = {'Content-Type': contentType};
   $httpProvider.defaults.headers.put = {'Content-Type': contentType};
   $httpProvider.defaults.headers.delete = {'Content-Type': contentType};
 
-  $httpProvider.interceptors.push('AuthInterceptor');
 }]);
 
     module.factory("User", ['$resource', function($resource){
@@ -134,7 +136,7 @@ module.config(['$httpProvider', function($httpProvider) {
                 console.log($scope.record);
                 $scope.record.ended_at = time;
                 console.log($scope.record);
-                $scope.record.update();
+                $scope.record.$update();
                 console.log("update");
                 tmp = $scope.record.ended_at - Date.parse($scope.record.started_at);
                 var hour = Math.floor(tmp / 1000 / 60 / 60);
