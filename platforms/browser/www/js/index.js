@@ -51,19 +51,80 @@ var app = {
 app.initialize();
 
 ons.bootstrap();
-var module = ons.bootstrap('myApp', ['onsen']);
-    module.controller('topController', function($scope) {
-        var $scope.user_list = [
-            { name: "北村尚紀"},
-            { name: "佐々木友美"},
-            { name: "久米啓太"},
-            { name: "保苅ヒロキ"}
-        ];
-    });
+var module = angular.module('myApp', ['onsen', 'ngResource']);
+
+    module.factory("User", ['$resource', function($resource){
+
+        return $resource(
+            'http://localhost:3000/users/:id',
+            {id: '@id'},
+            {
+                get: { method: 'GET', isArray: true},
+                create: {method: 'POST'}
+            }
+        );
+    }]);
+
+    module.factory("Record", ['$resource', function($resource){
+
+        return $resource(
+            'http://localhost:3000/users/:user_id/records/:id',
+            {user_id: '@user_id', id: '@id'},
+            {
+                query: { method: 'GET', isArray: true},
+                get: { method: 'GET', isArray: false},
+                save: { method: 'PATCH'}
+            }
+        );
+    }]);
 
 
-    module.controller('PageController', function($scope) {
-    ons.ready(function() {
-      // Init code here
+    module.controller('topController', ['$scope', 'User', function($scope, User){
+        $scope.users = User.query();
+
+    }]);
+
+    module.controller('detailController', ['$scope', 'Record', function($scope, Record) {
+        var options = $scope.myNavigator.getCurrentPage().options;
+        $scope.user = options.user;
+        var tmp;
+
+
+    Record.query({user_id: $scope.user.id}).$promise.then(function(records){
+        $scope.records = records;
+
+        angular.forEach($scope.records, function(value, key){
+            if(value.ended_at == null && value.user_id == $scope.user.id){
+                $scope.record = value;
+                $(".start_btn").text("STOP");
+            }
+        });
     });
-    });
+
+        $scope.onclick = function(){
+            var time = new Date();
+
+            if($scope.record == null){
+                console.log("create");
+                $scope.record = new Record;
+                $scope.record.user_id = $scope.user.id;
+                $scope.record.started_at = time;
+                $scope.record.$save();
+
+                $(".start_btn").text("STOP");
+
+            }else if($scope.record.ended_at == null){
+                $scope.record = new Record($scope.record);
+                console.log($scope.record);
+                $scope.record.ended_at = time;
+                $scope.record.$save();
+                console.log("update");
+                tmp = $scope.record.ended_at - Date.parse($scope.record.started_at);
+                var hour = Math.floor(tmp / 1000 / 60 / 60);
+                var min = Math.floor((tmp - hour * 1000 + 60 * 60) / 1000 / 60);
+                $scope.time_count = String(hour) + "時間" + String(min) + "分";
+                $(".start_btn").text("START");
+            }
+        }
+    }]);
+
